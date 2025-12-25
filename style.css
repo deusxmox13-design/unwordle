@@ -1,188 +1,322 @@
-/* ----------------------------------
-   GLOBAL SCREEN VISIBILITY
----------------------------------- */
+/* ---------- GLOBAL VISIBILITY ---------- */
 
 .screen {
-    display: none !important;
+    display: none;
 }
 
-#login-container {
-    display: block !important;
+#username-screen {
+    display: block;
 }
 
-/* ----------------------------------
-   GLOBAL PAGE STYLE
----------------------------------- */
+/* ---------- BASE PAGE ---------- */
+
+:root {
+    --bg: #101018;
+    --panel-bg: #1b1b26;
+    --panel-border: #f5f5f5;
+    --accent: #ff3b3b;
+    --accent2: #2fd16a;
+    --accent3: #ffd93b;
+    --text-main: #f5f5f5;
+    --text-sub: #c0c0d0;
+}
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #0d0d0d, #1a1a1a, #111);
-    color: #f2f2f2;
-    font-family: "Segoe UI", Arial, sans-serif;
-    text-align: center;
+    background: radial-gradient(circle at top, #30304a 0, #101018 45%, #050508 100%);
+    color: var(--text-main);
+    font-family: "Pixelify Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 100vh;
 }
 
-/* Center all screens */
+/* Centered panel for each screen */
+
 .screen {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 420px;
+    margin: 0 10px;
+    padding: 20px 18px 24px;
+    background: var(--panel-bg);
+    border: 4px solid var(--panel-border);
+    border-radius: 0;
+    box-shadow: 0 0 0 4px #000, 0 16px 0 #000;
+    text-align: center;
 }
 
-/* ----------------------------------
-   HEADERS
----------------------------------- */
+/* ---------- HEADINGS ---------- */
 
 h1 {
-    margin-bottom: 20px;
-    font-size: 32px;
-    font-weight: 600;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    margin: 0 0 8px;
+    font-size: 28px;
+    letter-spacing: 3px;
 }
 
-/* ----------------------------------
-   INPUTS
----------------------------------- */
+.subtitle {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--text-sub);
+}
 
-input {
-    width: 85%;
-    padding: 12px;
-    margin: 10px auto;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #1e1e1e;
-    color: white;
-    font-size: 16px;
+/* ---------- TEXT ---------- */
+
+p {
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.error-text {
+    color: var(--accent);
+    min-height: 18px;
+}
+
+/* ---------- INPUTS ---------- */
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 4px;
+    border: 3px solid #000;
+    background: #050509;
+    color: var(--text-main);
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+input[type="text"]:focus {
     outline: none;
-    transition: 0.2s;
+    border-color: var(--accent3);
 }
 
-input:focus {
-    border-color: #4af;
-    box-shadow: 0 0 8px #4af;
-}
-
-/* ----------------------------------
-   BUTTONS
----------------------------------- */
+/* ---------- BUTTONS ---------- */
 
 button {
-    width: 85%;
-    padding: 12px;
-    margin: 12px auto;
-    border: none;
-    border-radius: 8px;
-    background: #333;
-    color: white;
-    font-size: 17px;
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px 8px;
+    border: 3px solid #000;
+    background: #e83b3b;
+    color: #fff;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.25s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.1s;
+    box-shadow: 0 4px 0 #000;
 }
 
 button:hover {
-    background: #4af;
-    box-shadow: 0 0 12px #4af;
+    background: #ff5555;
 }
 
-.link-btn {
-    background: transparent;
-    color: #4af;
-    text-decoration: underline;
-    width: auto;
+button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #000;
 }
 
-.danger-btn {
-    background: #b00020;
+.secondary-btn {
+    background: #3b58e8;
 }
 
-.danger-btn:hover {
-    background: #e00030;
-    box-shadow: 0 0 12px #e00030;
+.secondary-btn:hover {
+    background: #5875ff;
 }
 
-/* ----------------------------------
-   LEADERBOARD
----------------------------------- */
+/* ---------- GAME AREA ---------- */
 
-#leaderboard-list {
-    margin-top: 20px;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    background: rgba(255,255,255,0.07);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: left;
+#game-title {
+    margin-bottom: 4px;
 }
 
-#leaderboard-list div {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    font-size: 16px;
-}
-
-#leaderboard-list div:last-child {
-    border-bottom: none;
-}
-
-/* ----------------------------------
-   GAME AREA
----------------------------------- */
-
-#game-area {
-    margin-bottom: 20px;
-    font-size: 18px;
-}
-
-#guess-history {
-    margin-top: 20px;
-}
-
-.guess-row {
-    display: flex;
-    justify-content: center;
+#game-mode-label {
+    color: var(--text-sub);
+    font-size: 13px;
     margin-bottom: 6px;
 }
 
-.guess-box {
-    width: 42px;
-    height: 42px;
-    margin: 4px;
+#score-display {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: var(--accent2);
+}
+
+#game-board {
+    margin: 10px auto 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+/* Guess tiles */
+
+.row {
+    display: flex;
+    gap: 4px;
+}
+
+.tile {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #000;
+    background: #050509;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Colors */
+
+.green {
+    background: #2fd16a;
+    color: #000;
+}
+
+.yellow {
+    background: #ffd93b;
+    color: #000;
+}
+
+.red {
+    background: #c52f2f;
+    color: #000;
+}
+
+/* Input row */
+
+#input-row {
+    margin-top: 12px;
+}
+
+#guess-input {
+    margin-bottom: 6px;
+}
+
+#game-message {
+    min-height: 20px;
+    font-size: 13px;
+    color: var(--text-sub);
+}
+
+/* ---------- LEADERBOARD ---------- */
+
+#leaderboard-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: #30304a;
+    border-color: #000;
+    box-shadow: 0 3px 0 #000;
+}
+
+.tab-btn.active {
+    background: var(--accent3);
+    color: #000;
+}
+
+#leaderboard-mode-selector {
+    margin: 4px 0 10px;
     display: flex;
     justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.mode-chip {
+    padding: 4px 8px;
+    border: 2px solid #000;
+    background: #050509;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.mode-chip.active {
+    background: var(--accent2);
+    color: #000;
+}
+
+#leaderboard-list {
+    margin-top: 6px;
+    text-align: left;
+    background: #050509;
+    border: 3px solid #000;
+    padding: 8px;
+    min-height: 140px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 13px;
+}
+
+.lb-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+.lb-rank {
+    width: 20px;
+}
+
+.lb-name {
+    flex: 1;
+}
+
+.lb-score {
+    width: 60px;
+    text-align: right;
+}
+
+/* ---------- INSTRUCTIONS ---------- */
+
+.panel {
+    background: #050509;
+    border: 3px solid #000;
+    padding: 10px;
+    text-align: left;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.legend {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 8px;
+}
+
+.legend li {
+    display: flex;
     align-items: center;
-    font-weight: bold;
-    border-radius: 6px;
-    font-size: 20px;
-    color: black;
-    transition: 0.2s;
+    gap: 6px;
 }
 
-/* Tile colors */
-.green { background: #2ecc71; }
-.yellow { background: #f1c40f; }
-.red { background: #e74c3c; }
-.black { background: #000; color: white; }
-
-/* ----------------------------------
-   ANIMATIONS
----------------------------------- */
-
-.shake {
-    animation: shake 0.3s;
+.legend .tile {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
 }
 
-@keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    .screen {
+        max-width: 360px;
+    }
 }
+
