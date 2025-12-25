@@ -219,7 +219,37 @@ function startMode(mode) {
 //  RENDERING
 // =====================================================
 
-function renderBoard() {
+function renderBoard() 
+// Count occurrences in the guess
+const letterCounts = {};
+for (let ch of guessStr) {
+    letterCounts[ch] = (letterCounts[ch] || 0) + 1;
+}
+
+for (let i = 0; i < WORD_LENGTH; i++) {
+    const tile = document.createElement("div");
+    tile.className = "tile";
+
+    const letter = guessStr[i] || "";
+    tile.textContent = letter;
+
+    if (!letter) {
+        // empty tile
+    } else if (letterCounts[letter] >= 3) {
+        // NEW 4TH COLOR
+        tile.classList.add("overused");
+    } else if (letter === secretWord[i]) {
+        tile.classList.add("green");
+    } else if (secretWord.includes(letter)) {
+        tile.classList.add("yellow");
+    } else {
+        tile.classList.add("red");
+    }
+
+    row.appendChild(tile);
+}
+
+{
     gameBoard.innerHTML = "";
 
     // Render existing guesses
@@ -267,6 +297,22 @@ function renderBoard() {
 // =====================================================
 //  GUESS HANDLING
 // =====================================================
+function countOverusedLetters(word) {
+    const counts = {};
+    let overused = 0;
+
+    for (let ch of word) {
+        counts[ch] = (counts[ch] || 0) + 1;
+    }
+
+    for (let ch in counts) {
+        if (counts[ch] >= 3) {
+            overused += counts[ch];
+        }
+    }
+
+    return overused;
+}
 
 function handleGuess() {
     const raw = guessInput.value.toUpperCase().trim();
@@ -294,7 +340,10 @@ function handleGuess() {
 
     if (raw === secretWord) {
         const guessesUsed = guesses.length;
-        score = calculateScore(guessesUsed);
+        let base = calculateScore(guessesUsed);
+let penalty = countOverusedLetters(raw) * 0; // 0 points for overused letters
+score = base - penalty;
+
         scoreDisplay.textContent = "SCORE: " + score;
         gameMessage.textContent = "YOU WIN!";
         submitScore(currentMode, score);
@@ -490,5 +539,6 @@ instructionsBackBtn.addEventListener("click", () => {
         showScreen("username");
     }
 })();
+
 
 
