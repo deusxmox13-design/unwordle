@@ -1,6 +1,11 @@
-let scores = []; // TEMPORARY in-memory storage
+import { createClient } from "@supabase/supabase-js";
 
-exports.handler = async (event) => {
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+export const handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -9,8 +14,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const data = JSON.parse(event.body || "{}");
-    const { username, mode, score } = data;
+    const { username, mode, score } = JSON.parse(event.body);
 
     if (!username || !mode || typeof score !== "number") {
       return {
@@ -19,13 +23,18 @@ exports.handler = async (event) => {
       };
     }
 
-    scores.push({ username, mode, score });
+    const { error } = await supabase
+      .from("leaderboard")
+      .insert([{ username, mode, score }]);
+
+    if (error) throw error;
 
     return {
       statusCode: 200,
       body: JSON.stringify({ ok: true })
     };
   } catch (err) {
+    console.error("addScore error:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Server error" })
