@@ -82,7 +82,7 @@ const WORDS = [
 // =====================================================
 
 async function isRealWord(word) {
-    const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=PUT_YOUR_API_KEY_HERE`;
+    const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=abff2896-0554-4d68-abd0-e9fd058521ec`;
 
     try {
         const res = await fetch(url);
@@ -520,3 +520,4 @@ instructionsBackBtn.addEventListener("click", () => showScreen("menu"));
         showScreen("username");
     }
 })();
+
