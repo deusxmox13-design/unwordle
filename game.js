@@ -228,7 +228,7 @@ function startMode(mode) {
     gameMessage.textContent = "";
     guessInput.value = "";
     score = 0;
-
+}
     if (mode === "daily") {
         secretWord = getDailyWord();
         gameModeLabel.textContent = "DAILY MODE";
@@ -520,4 +520,5 @@ instructionsBackBtn.addEventListener("click", () => showScreen("menu"));
         showScreen("username");
     }
 })();
+
 
