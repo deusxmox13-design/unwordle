@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Un‑Wordle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-container">
+        <h2>Login</h2>
+        <input id="login-username" placeholder="Username">
+        <input id="login-password" type="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+        <p id="login-message"></p>
+        <button id="goto-create-btn">Create Account</button>
+    </div>
+
+    <!-- CREATE ACCOUNT -->
+    <div id="create-container" style="display:none;">
+        <h2>Create Account</h2>
+        <input id="create-username" placeholder="Username">
+        <input id="create-password" type="password" placeholder="Password">
+        <button id="create-btn">Create</button>
+        <p id="create-message"></p>
+        <button id="goto-login-btn">Back to Login</button>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div id="menu-container" style="display:none;">
+        <h2>Main Menu</h2>
+        <p id="menu-welcome"></p>
+        <button id="daily-mode-btn">Daily Mode</button>
+        <button id="endless-mode-btn">Endless Mode</button>
+        <button id="instructions-btn">Instructions</button>
+        <button id="goto-leaderboard-btn">Leaderboard</button>
+        <button id="logout-btn">Logout</button>
+    </div>
+
+    <!-- INSTRUCTIONS SCREEN -->
+    <div id="instructions-container" style="display:none;">
+        <h2>How to Play</h2>
+        <div id="instructions-text"></div>
+        <button id="instructions-back-btn">Back</button>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="leaderboard-container" style="display:none;">
+        <h2>Leaderboard</h2>
+        <div id="leaderboard-list"></div>
+        <button id="leaderboard-back-btn">Back</button>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-container" style="display:none;">
+        <div id="game-area"></div>
+        <input id="player-input" maxlength="20" placeholder="Enter guess">
+        <button id="submit-btn">Submit</button>
+        <p id="message"></p>
+        <div id="guess-history"></div>
+        <button id="back-menu-btn">Back to Menu</button>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
