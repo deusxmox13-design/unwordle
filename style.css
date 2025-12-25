@@ -113,29 +113,32 @@ input {
 }
 
 /* ============================================================
-   TILE COLORS
+   TILE COLORS — UPDATED FOR NEW SCORING
    ============================================================ */
 
+/* +2 points */
 .tile.green {
     background: #4caf50;
     border-color: #2e7d32;
 }
 
+/* +1 point */
 .tile.yellow {
     background: #c9a300;
     border-color: #8a7400;
 }
 
-.tile.red {
-    background: #b71c1c;
-    border-color: #7f0000;
-}
-
-/* NEW 4TH COLOR — Overused letters (3+ times) */
+/* 0 points */
 .tile.overused {
     background: #4a5a7a;
     border-color: #2f3a50;
     color: #fff;
+}
+
+/* -2 points */
+.tile.red {
+    background: #b71c1c;
+    border-color: #7f0000;
 }
 
 /* ============================================================
