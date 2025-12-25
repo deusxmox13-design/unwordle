@@ -19,6 +19,37 @@ const WORD_LENGTH = 5;
 let maxGuesses = 6;
 let guesses = [];
 let score = 0;
+// ---------- ELEMENTS ----------
+const usernameInput = document.getElementById("username-input");
+const usernameConfirmBtn = document.getElementById("username-confirm-btn");
+const usernameError = document.getElementById("username-error");
+
+const welcomeText = document.getElementById("welcome-text");
+
+const dailyModeBtn = document.getElementById("daily-mode-btn");
+const endlessModeBtn = document.getElementById("endless-mode-btn");
+const leaderboardBtn = document.getElementById("leaderboard-btn");
+const instructionsBtn = document.getElementById("instructions-btn");
+const changeUserBtn = document.getElementById("change-user-btn");
+
+const gameTitle = document.getElementById("game-title");
+const gameModeLabel = document.getElementById("game-mode-label");
+const scoreDisplay = document.getElementById("score-display");
+const gameBoard = document.getElementById("game-board");
+const guessInput = document.getElementById("guess-input");
+const guessBtn = document.getElementById("guess-btn");
+const gameMessage = document.getElementById("game-message");
+const backToMenuBtn = document.getElementById("back-to-menu-btn");
+
+const tabDaily = document.getElementById("tab-daily");
+const tabAllTime = document.getElementById("tab-alltime");
+const lbModeDaily = document.getElementById("lb-mode-daily");
+const lbModeEndless = document.getElementById("lb-mode-endless");
+const leaderboardList = document.getElementById("leaderboard-list");
+const leaderboardBackBtn = document.getElementById("leaderboard-back-btn");
+
+const instructionsBackBtn = document.getElementById("instructions-back-btn");
+
 
 const WORDS = [
 "ABACK","ABAFT","ABAND","ABASH","ABATE","ABBEY","ABBOT","ABDOM","ABHOR","ABIDE",
@@ -591,5 +622,6 @@ instructionsBackBtn.addEventListener("click", () => {
         showScreen("username");
     }
 })();
+
 
 
