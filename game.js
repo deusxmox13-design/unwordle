@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------------------------
-    // ACCOUNT SYSTEM (LOCAL)
+    // ACCOUNT SYSTEM (LOCAL ONLY)
     // ---------------------------
 
     const loginScreen = document.getElementById("login-container");
@@ -211,30 +211,44 @@ document.addEventListener("DOMContentLoaded", () => {
     instructionsBackBtn.addEventListener("click", showMenu);
 
     // ---------------------------
-    // LEADERBOARD (LOCAL)
+    // ONLINE LEADERBOARD FUNCTIONS
     // ---------------------------
 
-    function loadLeaderboard() {
+    async function saveScoreOnline(username, score) {
+        try {
+            await fetch("/.netlify/functions/addScore", {
+                method: "POST",
+                body: JSON.stringify({ username, score })
+            });
+        } catch (err) {
+            console.error("Error saving score:", err);
+        }
+    }
+
+    async function loadLeaderboardOnline() {
+        try {
+            const res = await fetch("/.netlify/functions/getLeaderboard");
+            return await res.json();
+        } catch (err) {
+            console.error("Error loading leaderboard:", err);
+            return [];
+        }
+    }
+
+    // ---------------------------
+    // LEADERBOARD (ONLINE)
+    // ---------------------------
+
+    gotoLeaderboardBtn.addEventListener("click", async () => {
+        const data = await loadLeaderboardOnline();
+
         leaderboardList.innerHTML = "";
-
-        let accounts = getAccounts();
-
-        let entries = Object.keys(accounts).map(username => ({
-            username,
-            score: accounts[username].score || 0
-        }));
-
-        entries.sort((a, b) => b.score - a.score);
-
-        entries.slice(0, 5).forEach((entry, index) => {
+        data.forEach((entry, index) => {
             const div = document.createElement("div");
             div.innerHTML = `<b>${index + 1}. ${entry.username}</b>: ${entry.score}`;
             leaderboardList.appendChild(div);
         });
-    }
 
-    gotoLeaderboardBtn.addEventListener("click", () => {
-        loadLeaderboard();
         showScreen(leaderboardScreen);
     });
 
@@ -314,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
         history.appendChild(row);
     }
 
-    submitBtn.addEventListener("click", () => {
+    submitBtn.addEventListener("click", async () => {
         let guess = input.value.toUpperCase().trim();
         input.value = "";
 
@@ -363,20 +377,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (guessesLeft <= 0) {
             message.innerHTML = `Round Over! Score: <b>${roundScore}</b>`;
 
-            let accounts = getAccounts();
-
             if (currentMode === "daily") {
-                accounts[currentUser].score += roundScore;
+                await saveScoreOnline(currentUser, roundScore);
+
+                let accounts = getAccounts();
                 accounts[currentUser].lastDailyPlayed = getTodayString();
+                saveAccounts(accounts);
                 dailyAvailable = false;
             }
-
-            saveAccounts(accounts);
-
-            totalScore = accounts[currentUser].score;
 
             setTimeout(showMenu, 2000);
         }
     });
 
 });
+
