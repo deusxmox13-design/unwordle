@@ -18,7 +18,7 @@ let currentMode = null; // "daily" or "endless"
 let secretWord = "";
 const WORD_LENGTH = 5;
 let maxGuesses = 6;
-let guesses = []; // each guess: { word: "ABCDE", tiles: ["red","yellow",...]}
+let guesses = []; // each guess: { word: "ABCDE", tiles: ["green","red",...]}
 let score = 0;
 
 // Tracks how many times each letter (A-Z) has been used
@@ -66,7 +66,6 @@ let lbMode = "daily"; // "daily" or "endless"
 
 // =====================================================
 //  WORD GENERATION (TEMP: 10 WORDS FOR DAILY/ENDLESS)
-//  These are used only as secret words.
 // =====================================================
 
 const WORDS = [
@@ -84,11 +83,10 @@ const WORDS = [
 
 // =====================================================
 //  DICTIONARY API VALIDATION
-//  (Still used to ensure guesses are real words)
 // =====================================================
 
 async function isRealWord(word) {
-    const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=abff2896-0554-4d68-abd0-e9fd058521ec`;
+    const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=PUT_YOUR_API_KEY_HERE`;
 
     try {
         const res = await fetch(url);
@@ -106,8 +104,7 @@ async function isRealWord(word) {
         return false;
     } catch (err) {
         console.error("Dictionary API error:", err);
-        // If dictionary fails, we could allow the word or reject it.
-        // Here we choose to allow, to avoid breaking the game.
+        // If the API fails, we allow the word so the game isn't blocked
         return true;
     }
 }
@@ -177,7 +174,7 @@ async function ensurePasswordForUser(username) {
 // =====================================================
 
 function showScreen(name) {
-    Object.values(screens).forEach(s => s.style.display = "none");
+    Object.values(screens).forEach(s => (s.style.display = "none"));
     screens[name].style.display = "block";
 }
 
@@ -202,7 +199,7 @@ function getRandomWord() {
 function clearBoard() {
     gameBoard.innerHTML = "";
     guesses = [];
-    letterUsage = {}; // reset letter usage each game
+    letterUsage = {};
 }
 
 function updateScoreDisplay() {
@@ -229,7 +226,7 @@ function startMode(mode) {
         gameModeLabel.textContent = "ENDLESS MODE";
     }
 
-    console.log("SECRET WORD (debug):", secretWord); // remove in production
+    console.log("SECRET WORD (debug):", secretWord); // remove this line in production
 
     renderBoard();
     showScreen("game");
@@ -237,13 +234,13 @@ function startMode(mode) {
 }
 
 // =====================================================
-//  RENDERING (COLORS COME FROM STORED TILES)
+//  RENDERING
 // =====================================================
 
 function renderBoard() {
     gameBoard.innerHTML = "";
 
-    // Render existing guesses
+    // Existing guesses
     for (const guess of guesses) {
         const row = document.createElement("div");
         row.className = "row";
@@ -258,7 +255,7 @@ function renderBoard() {
             const letter = guessStr[i];
             tile.textContent = letter || "";
 
-            const type = tiles[i]; // "red","yellow","overused","green"
+            const type = tiles[i]; // "green","yellow","overused","red"
             if (type) {
                 tile.classList.add(type);
             }
@@ -288,11 +285,11 @@ function renderBoard() {
 //
 // Per letter in the guess:
 //   - If NOT in secret word:
-//       * first time overall:   +2 (red)
+//       * first time overall:   +2 (green)
 //       * second time overall:  +1 (yellow)
-//       * 3rd+ time overall:    0 (overused color)
+//       * 3rd+ time overall:    0 (overused / blue-gray)
 //   - If IN secret word:
-//       * each time:           -2 (green)
+//       * each time:           -2 (red)
 //
 
 function scoreGuessAndClassify(guessWord) {
@@ -304,22 +301,22 @@ function scoreGuessAndClassify(guessWord) {
         const inSecret = secretWord.includes(letter);
 
         if (inSecret) {
-            // BAD: letter is in the secret word → -2
+            // BAD letter → -2 points → RED
             delta -= 2;
-            tiles.push("green");
+            tiles.push("red");
         } else {
             const usedBefore = letterUsage[letter] || 0;
 
             if (usedBefore === 0) {
-                // First time using this safe letter → +2, red
+                // First safe use → +2 → GREEN
                 delta += 2;
-                tiles.push("red");
+                tiles.push("green");
             } else if (usedBefore === 1) {
-                // Second time using this safe letter → +1, yellow
+                // Second safe use → +1 → YELLOW
                 delta += 1;
                 tiles.push("yellow");
             } else {
-                // 3rd+ time using this safe letter → 0, overused
+                // Third+ safe use → 0 → BLUE-GRAY
                 tiles.push("overused");
             }
 
@@ -332,7 +329,7 @@ function scoreGuessAndClassify(guessWord) {
 }
 
 // =====================================================
-//  GUESS HANDLING (WITH DICTIONARY API)
+//  GUESS HANDLING
 // =====================================================
 
 async function handleGuess() {
@@ -356,7 +353,7 @@ async function handleGuess() {
         return;
     }
 
-    // Score this guess and determine tile colors
+    // Score this guess and set tile colors
     const tiles = scoreGuessAndClassify(raw);
     updateScoreDisplay();
 
@@ -549,4 +546,3 @@ instructionsBackBtn.addEventListener("click", () => showScreen("menu"));
         showScreen("username");
     }
 })();
-
