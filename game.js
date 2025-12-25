@@ -254,8 +254,7 @@ const WORDS = [
 "POEMS","POESY","POINT","POISE","POKED","POKER","POKES","POLAR","POLED","POLER",
 "POLES","POLIO","POLKA","POLLS","POLYP","PONDS","PONER","PONGS","PONZU","POOCH",
 "POODS","POOFS","POOFY","POOLS","POOPS","POORI","POPES","POPPY","PORCH","PORED",
-"PORER","PORES","PORKS","PORKY","
-];
+"PORER","PORES","PORKS","PORKY",];
 
 // Fast lookup for valid guesses
 const VALID_WORDS = new Set(WORDS);
@@ -592,4 +591,5 @@ instructionsBackBtn.addEventListener("click", () => {
         showScreen("username");
     }
 })();
+
 
