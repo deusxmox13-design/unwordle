@@ -1,5 +1,5 @@
 // =====================================================
-// UNWORDLE NES - game.js (minimal word list, full setup)
+// UNWORDLE NES - game.js (Dictionary API + 4th color)
 // =====================================================
 
 // ---------- BASIC STATE ----------
@@ -37,7 +37,6 @@ const instructionsBtn = document.getElementById("instructions-btn");
 const changeUserBtn = document.getElementById("change-user-btn");
 
 // Game UI
-const gameTitle = document.getElementById("game-title");
 const gameModeLabel = document.getElementById("game-mode-label");
 const scoreDisplay = document.getElementById("score-display");
 const gameBoard = document.getElementById("game-board");
@@ -62,8 +61,7 @@ let lbType = "daily"; // "daily" or "allTime"
 let lbMode = "daily"; // "daily" or "endless"
 
 // =====================================================
-//  WORD DATABASE (TEMP: 10 WORDS)
-//  Replace this with your big list later.
+//  WORD GENERATION (TEMP: 10 WORDS FOR DAILY/ENDLESS)
 // =====================================================
 
 const WORDS = [
@@ -79,20 +77,40 @@ const WORDS = [
     "ZEBRA"
 ];
 
-const VALID_WORDS = new Set(WORDS);
-
 // =====================================================
-//  PROFILE / "ACCOUNT" (LOCAL ONLY)
+//  DICTIONARY API VALIDATION
 // =====================================================
 
-// We’ll fake a “profile” by storing username + password hash in localStorage.
-// This is NOT secure auth; it’s just for your game UX.
+async function isRealWord(word) {
+    const url = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=PUT_YOUR_API_KEY_HERE`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return false;
+
+        const data = await res.json();
+
+        // Merriam-Webster returns:
+        // - array of objects if valid
+        // - array of strings if invalid
+        if (Array.isArray(data) && data.length > 0 && typeof data[0] === "object") {
+            return true;
+        }
+
+        return false;
+    } catch (err) {
+        console.error("Dictionary API error:", err);
+        return false;
+    }
+}
+
+// =====================================================
+//  PROFILE SYSTEM (LOCAL STORAGE)
+// =====================================================
 
 const STORAGE_KEY_PROFILE = "unwordle_profile";
 
 function hashPassword(pw) {
-    // Super simple hash just to avoid storing raw text.
-    // You can replace with something stronger later.
     let h = 0;
     for (let i = 0; i < pw.length; i++) {
         h = (h * 31 + pw.charCodeAt(i)) >>> 0;
@@ -118,14 +136,11 @@ function loadProfile() {
     }
 }
 
-// Simple prompt-based password (since HTML doesn’t have a password field yet).
-// If you want a visible input, add <input id="password-input" ...> to HTML and wire it here.
 async function ensurePasswordForUser(username) {
     const profile = loadProfile();
     const existingUser = profile?.username;
 
     if (!existingUser || existingUser !== username) {
-        // New user: create password
         const pw = prompt("Create a password for your profile:");
         if (!pw || pw.trim().length < 3) {
             alert("Password must be at least 3 characters.");
@@ -135,7 +150,6 @@ async function ensurePasswordForUser(username) {
         saveProfile(username, currentPassword);
         return true;
     } else {
-        // Existing user: ask for password
         const pw = prompt("Enter your password:");
         if (!pw) {
             alert("Password required.");
@@ -164,15 +178,13 @@ function todayKey() {
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
 }
 
-// Deterministic daily word
 function getDailyWord() {
     const key = todayKey();
     let hash = 0;
     for (let i = 0; i < key.length; i++) {
         hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
     }
-    const index = hash % WORDS.length;
-    return WORDS[index];
+    return WORDS[hash % WORDS.length];
 }
 
 function getRandomWord() {
@@ -184,119 +196,11 @@ function clearBoard() {
     guesses = [];
 }
 
-// Scoring – same for daily & endless
 function calculateScore(guessesUsed) {
     return (maxGuesses - guessesUsed + 1) * 10;
 }
 
-// =====================================================
-//  GAME SETUP
-// =====================================================
-
-function startMode(mode) {
-    currentMode = mode;
-    clearBoard();
-    gameMessage.textContent = "";
-    guessInput.value = "";
-    guessInput.maxLength = WORD_LENGTH;
-    score = 0;
-
-    if (mode === "daily") {
-        secretWord = getDailyWord();
-        gameModeLabel.textContent = "DAILY MODE";
-    } else {
-        secretWord = getRandomWord();
-        gameModeLabel.textContent = "ENDLESS MODE";
-    }
-
-    scoreDisplay.textContent = "SCORE: 0";
-    renderBoard();
-    showScreen("game");
-    guessInput.focus();
-}
-
-// =====================================================
-//  RENDERING
-// =====================================================
-
-function renderBoard() 
-// Count occurrences in the guess
-const letterCounts = {};
-for (let ch of guessStr) {
-    letterCounts[ch] = (letterCounts[ch] || 0) + 1;
-}
-
-for (let i = 0; i < WORD_LENGTH; i++) {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-
-    const letter = guessStr[i] || "";
-    tile.textContent = letter;
-
-    if (!letter) {
-        // empty tile
-    } else if (letterCounts[letter] >= 3) {
-        // NEW 4TH COLOR
-        tile.classList.add("overused");
-    } else if (letter === secretWord[i]) {
-        tile.classList.add("green");
-    } else if (secretWord.includes(letter)) {
-        tile.classList.add("yellow");
-    } else {
-        tile.classList.add("red");
-    }
-
-    row.appendChild(tile);
-}
-
-{
-    gameBoard.innerHTML = "";
-
-    // Render existing guesses
-    for (const guess of guesses) {
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const guessStr = guess.word;
-        for (let i = 0; i < WORD_LENGTH; i++) {
-            const tile = document.createElement("div");
-            tile.className = "tile";
-
-            const letter = guessStr[i] || "";
-            tile.textContent = letter;
-
-            if (!letter) {
-                // empty
-            } else if (letter === secretWord[i]) {
-                tile.classList.add("green");
-            } else if (secretWord.includes(letter)) {
-                tile.classList.add("yellow");
-            } else {
-                tile.classList.add("red");
-            }
-
-            row.appendChild(tile);
-        }
-
-        gameBoard.appendChild(row);
-    }
-
-    // Render remaining empty rows
-    for (let r = guesses.length; r < maxGuesses; r++) {
-        const row = document.createElement("div");
-        row.className = "row";
-        for (let i = 0; i < WORD_LENGTH; i++) {
-            const tile = document.createElement("div");
-            tile.className = "tile";
-            row.appendChild(tile);
-        }
-        gameBoard.appendChild(row);
-    }
-}
-
-// =====================================================
-//  GUESS HANDLING
-// =====================================================
+// Count letters used 3+ times
 function countOverusedLetters(word) {
     const counts = {};
     let overused = 0;
@@ -314,7 +218,91 @@ function countOverusedLetters(word) {
     return overused;
 }
 
-function handleGuess() {
+// =====================================================
+//  GAME SETUP
+// =====================================================
+
+function startMode(mode) {
+    currentMode = mode;
+    clearBoard();
+    gameMessage.textContent = "";
+    guessInput.value = "";
+    score = 0;
+
+    if (mode === "daily") {
+        secretWord = getDailyWord();
+        gameModeLabel.textContent = "DAILY MODE";
+    } else {
+        secretWord = getRandomWord();
+        gameModeLabel.textContent = "ENDLESS MODE";
+    }
+
+    scoreDisplay.textContent = "SCORE: 0";
+    renderBoard();
+    showScreen("game");
+    guessInput.focus();
+}
+
+// =====================================================
+//  RENDERING (WITH 4TH COLOR)
+// =====================================================
+
+function renderBoard() {
+    gameBoard.innerHTML = "";
+
+    for (const guess of guesses) {
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const guessStr = guess.word;
+
+        // Count occurrences
+        const letterCounts = {};
+        for (let ch of guessStr) {
+            letterCounts[ch] = (letterCounts[ch] || 0) + 1;
+        }
+
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const tile = document.createElement("div");
+            tile.className = "tile";
+
+            const letter = guessStr[i];
+            tile.textContent = letter;
+
+            if (letterCounts[letter] >= 3) {
+                tile.classList.add("overused");
+            } else if (letter === secretWord[i]) {
+                tile.classList.add("green");
+            } else if (secretWord.includes(letter)) {
+                tile.classList.add("yellow");
+            } else {
+                tile.classList.add("red");
+            }
+
+            row.appendChild(tile);
+        }
+
+        gameBoard.appendChild(row);
+    }
+
+    // Empty rows
+    for (let r = guesses.length; r < maxGuesses; r++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const tile = document.createElement("div");
+            tile.className = "tile";
+            row.appendChild(tile);
+        }
+        gameBoard.appendChild(row);
+    }
+}
+
+// =====================================================
+//  GUESS HANDLING (WITH DICTIONARY API)
+// =====================================================
+
+async function handleGuess() {
     const raw = guessInput.value.toUpperCase().trim();
     if (!raw) return;
 
@@ -323,8 +311,10 @@ function handleGuess() {
         return;
     }
 
-    if (!VALID_WORDS.has(raw)) {
-        gameMessage.textContent = "NOT IN WORD LIST.";
+    // Validate using dictionary API
+    const valid = await isRealWord(raw);
+    if (!valid) {
+        gameMessage.textContent = "NOT A REAL WORD.";
         return;
     }
 
@@ -341,8 +331,8 @@ function handleGuess() {
     if (raw === secretWord) {
         const guessesUsed = guesses.length;
         let base = calculateScore(guessesUsed);
-let penalty = countOverusedLetters(raw) * 0; // 0 points for overused letters
-score = base - penalty;
+        let penalty = countOverusedLetters(raw) * 0; // 0 points for overused letters
+        score = base - penalty;
 
         scoreDisplay.textContent = "SCORE: " + score;
         gameMessage.textContent = "YOU WIN!";
@@ -443,7 +433,6 @@ usernameConfirmBtn.addEventListener("click", async () => {
         return;
     }
 
-    // Ensure password flow
     const ok = await ensurePasswordForUser(name);
     if (!ok) return;
 
@@ -454,9 +443,7 @@ usernameConfirmBtn.addEventListener("click", async () => {
 });
 
 usernameInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        usernameConfirmBtn.click();
-    }
+    if (e.key === "Enter") usernameConfirmBtn.click();
 });
 
 // Menu
@@ -482,9 +469,7 @@ guessInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handleGuess();
 });
 
-backToMenuBtn.addEventListener("click", () => {
-    showScreen("menu");
-});
+backToMenuBtn.addEventListener("click", () => showScreen("menu"));
 
 // Leaderboard controls
 tabDaily.addEventListener("click", () => {
@@ -515,14 +500,10 @@ lbModeEndless.addEventListener("click", () => {
     loadLeaderboard();
 });
 
-leaderboardBackBtn.addEventListener("click", () => {
-    showScreen("menu");
-});
+leaderboardBackBtn.addEventListener("click", () => showScreen("menu"));
 
 // Instructions
-instructionsBackBtn.addEventListener("click", () => {
-    showScreen("menu");
-});
+instructionsBackBtn.addEventListener("click", () => showScreen("menu"));
 
 // =====================================================
 //  INIT
@@ -539,6 +520,3 @@ instructionsBackBtn.addEventListener("click", () => {
         showScreen("username");
     }
 })();
-
-
-
