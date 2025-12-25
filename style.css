@@ -1,13 +1,77 @@
 body {
+    background: #111;
+    color: white;
     font-family: Arial, sans-serif;
     text-align: center;
-    background: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+.screen {
+    display: none;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+input {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
 }
 
 button {
-    margin: 5px;
-    padding: 10px 20px;
+    display: block;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+button:hover {
+    background: #666;
+}
+
+.link-btn {
+    background: transparent;
+    color: #4af;
+    text-decoration: underline;
+}
+
+.danger-btn {
+    background: #a00;
+}
+
+#leaderboard-list {
+    margin-top: 20px;
+    text-align: left;
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#leaderboard-list div {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+}
+
+#leaderboard-list div:last-child {
+    border-bottom: none;
+}
+
+#game-area {
+    margin-bottom: 20px;
 }
 
 #guess-history {
@@ -21,30 +85,29 @@ button {
 }
 
 .guess-box {
-    width: 30px;
-    height: 30px;
-    margin: 2px;
+    width: 35px;
+    height: 35px;
+    margin: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-weight: bold;
+    border-radius: 5px;
 }
 
-.green { background: green; }
-.yellow { background: goldenrod; }
-.red { background: red; }
-.black { background: black; }
+.green { background: #2ecc71; }
+.yellow { background: #f1c40f; }
+.red { background: #e74c3c; }
+.black { background: #000; color: white; }
 
 .shake {
     animation: shake 0.3s;
 }
 
 @keyframes shake {
-    0% { transform: translateX(0px); }
+    0% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
     50% { transform: translateX(5px); }
     75% { transform: translateX(-5px); }
-    100% { transform: translateX(0px); }
+    100% { transform: translateX(0); }
 }
-
