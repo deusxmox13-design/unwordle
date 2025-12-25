@@ -81,19 +81,25 @@
         <h1>HOW TO PLAY</h1>
 
         <div class="panel">
-            <p>Guess the hidden 5‑letter word in a limited number of tries.</p>
-            <p>Tile colors show feedback:</p>
+            <p><strong>Unwordle is the opposite of Wordle.</strong></p>
+            <p>You are trying to guess <em>letters that are NOT in the secret word</em> to score points.</p>
 
+            <h3>Scoring Rules</h3>
             <ul class="legend">
-                <li><span class="tile green">A</span> Correct letter, correct spot</li>
-                <li><span class="tile yellow">A</span> Letter is in the word, wrong spot</li>
-                <li><span class="tile red">A</span> Letter is not in the word</li>
-                <li><span class="tile overused">A</span> Letter used 3 or more times — counts for 0 points</li>
+                <li><span class="tile green">A</span> <strong>+2 points</strong> — First time you use a letter that is NOT in the secret word</li>
+                <li><span class="tile yellow">A</span> <strong>+1 point</strong> — Second time you use that same safe letter</li>
+                <li><span class="tile overused">A</span> <strong>0 points</strong> — Third or more time using that safe letter</li>
+                <li><span class="tile red">A</span> <strong>−2 points</strong> — Letter IS in the secret word (BAD)</li>
             </ul>
 
-            <p>Daily Mode: one shared word per day.</p>
-            <p>Endless Mode: unlimited rounds, score as high as possible.</p>
-            <p>All guesses are validated using the Merriam‑Webster Dictionary API.</p>
+            <h3>Gameplay</h3>
+            <p>Each guess must be a real 5‑letter word (validated using the Merriam‑Webster Dictionary API).</p>
+            <p>You get <strong>6 guesses</strong> per round.</p>
+            <p>Your total score is the sum of all letter scores across all guesses.</p>
+
+            <h3>Modes</h3>
+            <p><strong>Daily Mode:</strong> One shared secret word per day.</p>
+            <p><strong>Endless Mode:</strong> Unlimited rounds — try to get the highest score.</p>
         </div>
 
         <button id="instructions-back-btn" class="secondary-btn">BACK</button>
@@ -103,3 +109,4 @@
     <script src="game.js"></script>
 </body>
 </html>
+
