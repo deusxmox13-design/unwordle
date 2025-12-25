@@ -1,5 +1,5 @@
 // =====================================================
-// UNWORDLE NES - game.js (Dictionary API + 4th color)
+// UNWORDLE NES - game.js (letter-based scoring + 4th color)
 // =====================================================
 
 // ---------- BASIC STATE ----------
@@ -18,8 +18,12 @@ let currentMode = null; // "daily" or "endless"
 let secretWord = "";
 const WORD_LENGTH = 5;
 let maxGuesses = 6;
-let guesses = [];
+let guesses = []; // each guess: { word: "ABCDE", tiles: ["red","yellow",...]}
 let score = 0;
+
+// Tracks how many times each letter (A-Z) has been used
+// *only counting letters that are NOT in the secret word*
+let letterUsage = {}; // { 'A': count, 'B': count, ... }
 
 // ---------- ELEMENTS ----------
 
@@ -62,6 +66,7 @@ let lbMode = "daily"; // "daily" or "endless"
 
 // =====================================================
 //  WORD GENERATION (TEMP: 10 WORDS FOR DAILY/ENDLESS)
+//  These are used only as secret words.
 // =====================================================
 
 const WORDS = [
@@ -79,6 +84,7 @@ const WORDS = [
 
 // =====================================================
 //  DICTIONARY API VALIDATION
+//  (Still used to ensure guesses are real words)
 // =====================================================
 
 async function isRealWord(word) {
@@ -100,7 +106,9 @@ async function isRealWord(word) {
         return false;
     } catch (err) {
         console.error("Dictionary API error:", err);
-        return false;
+        // If dictionary fails, we could allow the word or reject it.
+        // Here we choose to allow, to avoid breaking the game.
+        return true;
     }
 }
 
@@ -194,28 +202,11 @@ function getRandomWord() {
 function clearBoard() {
     gameBoard.innerHTML = "";
     guesses = [];
+    letterUsage = {}; // reset letter usage each game
 }
 
-function calculateScore(guessesUsed) {
-    return (maxGuesses - guessesUsed + 1) * 10;
-}
-
-// Count letters used 3+ times
-function countOverusedLetters(word) {
-    const counts = {};
-    let overused = 0;
-
-    for (let ch of word) {
-        counts[ch] = (counts[ch] || 0) + 1;
-    }
-
-    for (let ch in counts) {
-        if (counts[ch] >= 3) {
-            overused += counts[ch];
-        }
-    }
-
-    return overused;
+function updateScoreDisplay() {
+    scoreDisplay.textContent = "SCORE: " + score;
 }
 
 // =====================================================
@@ -228,7 +219,8 @@ function startMode(mode) {
     gameMessage.textContent = "";
     guessInput.value = "";
     score = 0;
-}
+    updateScoreDisplay();
+
     if (mode === "daily") {
         secretWord = getDailyWord();
         gameModeLabel.textContent = "DAILY MODE";
@@ -237,46 +229,38 @@ function startMode(mode) {
         gameModeLabel.textContent = "ENDLESS MODE";
     }
 
-    scoreDisplay.textContent = "SCORE: 0";
+    console.log("SECRET WORD (debug):", secretWord); // remove in production
+
     renderBoard();
     showScreen("game");
     guessInput.focus();
 }
 
 // =====================================================
-//  RENDERING (WITH 4TH COLOR)
+//  RENDERING (COLORS COME FROM STORED TILES)
 // =====================================================
 
 function renderBoard() {
     gameBoard.innerHTML = "";
 
+    // Render existing guesses
     for (const guess of guesses) {
         const row = document.createElement("div");
         row.className = "row";
 
         const guessStr = guess.word;
-
-        // Count occurrences
-        const letterCounts = {};
-        for (let ch of guessStr) {
-            letterCounts[ch] = (letterCounts[ch] || 0) + 1;
-        }
+        const tiles = guess.tiles;
 
         for (let i = 0; i < WORD_LENGTH; i++) {
             const tile = document.createElement("div");
             tile.className = "tile";
 
             const letter = guessStr[i];
-            tile.textContent = letter;
+            tile.textContent = letter || "";
 
-            if (letterCounts[letter] >= 3) {
-                tile.classList.add("overused");
-            } else if (letter === secretWord[i]) {
-                tile.classList.add("green");
-            } else if (secretWord.includes(letter)) {
-                tile.classList.add("yellow");
-            } else {
-                tile.classList.add("red");
+            const type = tiles[i]; // "red","yellow","overused","green"
+            if (type) {
+                tile.classList.add(type);
             }
 
             row.appendChild(tile);
@@ -296,6 +280,55 @@ function renderBoard() {
         }
         gameBoard.appendChild(row);
     }
+}
+
+// =====================================================
+//  LETTER-BASED SCORING LOGIC
+// =====================================================
+//
+// Per letter in the guess:
+//   - If NOT in secret word:
+//       * first time overall:   +2 (red)
+//       * second time overall:  +1 (yellow)
+//       * 3rd+ time overall:    0 (overused color)
+//   - If IN secret word:
+//       * each time:           -2 (green)
+//
+
+function scoreGuessAndClassify(guessWord) {
+    const tiles = [];
+    let delta = 0;
+
+    for (let i = 0; i < WORD_LENGTH; i++) {
+        const letter = guessWord[i];
+        const inSecret = secretWord.includes(letter);
+
+        if (inSecret) {
+            // BAD: letter is in the secret word → -2
+            delta -= 2;
+            tiles.push("green");
+        } else {
+            const usedBefore = letterUsage[letter] || 0;
+
+            if (usedBefore === 0) {
+                // First time using this safe letter → +2, red
+                delta += 2;
+                tiles.push("red");
+            } else if (usedBefore === 1) {
+                // Second time using this safe letter → +1, yellow
+                delta += 1;
+                tiles.push("yellow");
+            } else {
+                // 3rd+ time using this safe letter → 0, overused
+                tiles.push("overused");
+            }
+
+            letterUsage[letter] = usedBefore + 1;
+        }
+    }
+
+    score += delta;
+    return tiles;
 }
 
 // =====================================================
@@ -323,22 +356,18 @@ async function handleGuess() {
         return;
     }
 
-    guesses.push({ word: raw });
+    // Score this guess and determine tile colors
+    const tiles = scoreGuessAndClassify(raw);
+    updateScoreDisplay();
+
+    guesses.push({ word: raw, tiles });
     renderBoard();
     guessInput.value = "";
     gameMessage.textContent = "";
 
-    if (raw === secretWord) {
-        const guessesUsed = guesses.length;
-        let base = calculateScore(guessesUsed);
-        let penalty = countOverusedLetters(raw) * 0; // 0 points for overused letters
-        score = base - penalty;
-
-        scoreDisplay.textContent = "SCORE: " + score;
-        gameMessage.textContent = "YOU WIN!";
+    if (guesses.length >= maxGuesses) {
+        gameMessage.textContent = `GAME OVER. WORD WAS: ${secretWord}`;
         submitScore(currentMode, score);
-    } else if (guesses.length >= maxGuesses) {
-        gameMessage.textContent = `OUT OF GUESSES. WORD WAS: ${secretWord}`;
     }
 }
 
@@ -520,5 +549,4 @@ instructionsBackBtn.addEventListener("click", () => showScreen("menu"));
         showScreen("username");
     }
 })();
-
 
