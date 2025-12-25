@@ -1,3 +1,21 @@
+/* ----------------------------------
+   GLOBAL SCREEN VISIBILITY FIX
+---------------------------------- */
+
+/* Hide all screens unless JS shows them */
+.screen {
+    display: none !important;
+}
+
+/* Show login screen first */
+#login-container {
+    display: block !important;
+}
+
+/* ----------------------------------
+   GENERAL PAGE STYLING
+---------------------------------- */
+
 body {
     background: #111;
     color: white;
@@ -7,22 +25,27 @@ body {
     padding: 0;
 }
 
-.screen {
-    display: none;
-    padding: 20px;
-}
-
 h1 {
     margin-bottom: 20px;
 }
+
+p {
+    margin: 10px 0;
+}
+
+/* ----------------------------------
+   INPUTS & BUTTONS
+---------------------------------- */
 
 input {
     display: block;
     margin: 10px auto;
     padding: 10px;
-    width: 200px;
+    width: 220px;
     border-radius: 5px;
     border: none;
+    background: #222;
+    color: white;
 }
 
 button {
@@ -34,6 +57,8 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 200px;
+    font-size: 16px;
 }
 
 button:hover {
@@ -44,16 +69,25 @@ button:hover {
     background: transparent;
     color: #4af;
     text-decoration: underline;
+    width: auto;
 }
 
 .danger-btn {
     background: #a00;
 }
 
+.danger-btn:hover {
+    background: #c00;
+}
+
+/* ----------------------------------
+   LEADERBOARD
+---------------------------------- */
+
 #leaderboard-list {
     margin-top: 20px;
     text-align: left;
-    width: 250px;
+    width: 260px;
     margin-left: auto;
     margin-right: auto;
     background: #222;
@@ -70,8 +104,13 @@ button:hover {
     border-bottom: none;
 }
 
+/* ----------------------------------
+   GAME AREA
+---------------------------------- */
+
 #game-area {
     margin-bottom: 20px;
+    font-size: 18px;
 }
 
 #guess-history {
@@ -85,20 +124,27 @@ button:hover {
 }
 
 .guess-box {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     margin: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
     border-radius: 5px;
+    color: black;
+    font-size: 18px;
 }
 
+/* Colors for scoring */
 .green { background: #2ecc71; }
 .yellow { background: #f1c40f; }
 .red { background: #e74c3c; }
 .black { background: #000; color: white; }
+
+/* ----------------------------------
+   ANIMATIONS
+---------------------------------- */
 
 .shake {
     animation: shake 0.3s;
