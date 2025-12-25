@@ -1,273 +1,210 @@
-/* ---------- GLOBAL VISIBILITY ---------- */
-
-.screen {
-    display: none;
-}
-
-#username-screen {
-    display: block;
-}
-
-/* ---------- BASE PAGE ---------- */
-
-:root {
-    --bg: #101018;
-    --panel-bg: #1b1b26;
-    --panel-border: #f5f5f5;
-    --accent: #ff3b3b;
-    --accent2: #2fd16a;
-    --accent3: #ffd93b;
-    --text-main: #f5f5f5;
-    --text-sub: #c0c0d0;
-}
-
-* {
-    box-sizing: border-box;
-}
+/* ============================================================
+   GLOBAL STYLE — NES / RETRO LOOK
+   ============================================================ */
 
 body {
     margin: 0;
     padding: 0;
-    background: radial-gradient(circle at top, #30304a 0, #101018 45%, #050508 100%);
-    color: var(--text-main);
-    font-family: "Pixelify Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-}
-
-/* Centered panel for each screen */
-
-.screen {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 10px;
-    padding: 20px 18px 24px;
-    background: var(--panel-bg);
-    border: 4px solid var(--panel-border);
-    border-radius: 0;
-    box-shadow: 0 0 0 4px #000, 0 16px 0 #000;
+    background: #111;
+    color: #fff;
+    font-family: "Pixelify Sans", monospace;
     text-align: center;
 }
 
-/* ---------- HEADINGS ---------- */
-
 h1 {
-    margin: 0 0 8px;
-    font-size: 28px;
-    letter-spacing: 3px;
+    font-size: 42px;
+    margin-bottom: 10px;
 }
 
 .subtitle {
-    margin: 0 0 16px;
-    font-size: 13px;
-    color: var(--text-sub);
+    font-size: 18px;
+    opacity: 0.8;
 }
-
-/* ---------- TEXT ---------- */
-
-p {
-    margin: 6px 0;
-    font-size: 14px;
-}
-
-.error-text {
-    color: var(--accent);
-    min-height: 18px;
-}
-
-/* ---------- INPUTS ---------- */
-
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0 4px;
-    border: 3px solid #000;
-    background: #050509;
-    color: var(--text-main);
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
-input[type="text"]:focus {
-    outline: none;
-    border-color: var(--accent3);
-}
-
-/* ---------- BUTTONS ---------- */
 
 button {
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px 8px;
-    border: 3px solid #000;
-    background: #e83b3b;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 20px;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border: 3px solid #fff;
+    background: #222;
     color: #fff;
-    font-size: 14px;
     cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.1s;
-    box-shadow: 0 4px 0 #000;
+    width: 260px;
+    transition: 0.15s;
 }
 
 button:hover {
-    background: #ff5555;
-}
-
-button:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #000;
+    background: #444;
 }
 
 .secondary-btn {
-    background: #3b58e8;
+    background: #333;
+    border-color: #aaa;
 }
 
-.secondary-btn:hover {
-    background: #5875ff;
+.error-text {
+    color: #ff5555;
+    margin-top: 10px;
 }
 
-/* ---------- GAME AREA ---------- */
+/* ============================================================
+   SCREEN HANDLING
+   ============================================================ */
 
-#game-title {
-    margin-bottom: 4px;
+.screen {
+    display: none;
+    padding: 40px 20px;
 }
 
-#game-mode-label {
-    color: var(--text-sub);
-    font-size: 13px;
-    margin-bottom: 6px;
+#username-screen,
+#menu-screen,
+#game-screen,
+#leaderboard-screen,
+#instructions-screen {
+    max-width: 500px;
+    margin: auto;
 }
 
-#score-display {
-    font-size: 14px;
-    margin-bottom: 12px;
-    color: var(--accent2);
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+input {
+    font-family: "Pixelify Sans", monospace;
+    font-size: 22px;
+    padding: 10px;
+    width: 260px;
+    border: 3px solid #fff;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 10px;
 }
+
+/* ============================================================
+   GAME BOARD
+   ============================================================ */
 
 #game-board {
-    margin: 10px auto 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
+    margin: 20px auto;
+    width: 260px;
 }
-
-/* Guess tiles */
 
 .row {
     display: flex;
-    gap: 4px;
-}
-
-.tile {
-    width: 32px;
-    height: 32px;
-    border: 3px solid #000;
-    background: #050509;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-}
-
-/* Colors */
-
-.green {
-    background: #2fd16a;
-    color: #000;
-}
-
-.yellow {
-    background: #ffd93b;
-    color: #000;
-}
-
-.red {
-    background: #c52f2f;
-    color: #000;
-}
-
-/* Input row */
-
-#input-row {
-    margin-top: 12px;
-}
-
-#guess-input {
     margin-bottom: 6px;
 }
 
-#game-message {
-    min-height: 20px;
-    font-size: 13px;
-    color: var(--text-sub);
+.tile {
+    width: 46px;
+    height: 46px;
+    border: 3px solid #555;
+    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
 }
 
-/* ---------- LEADERBOARD ---------- */
+/* ============================================================
+   TILE COLORS
+   ============================================================ */
+
+.tile.green {
+    background: #4caf50;
+    border-color: #2e7d32;
+}
+
+.tile.yellow {
+    background: #c9a300;
+    border-color: #8a7400;
+}
+
+.tile.red {
+    background: #b71c1c;
+    border-color: #7f0000;
+}
+
+/* NEW 4TH COLOR — Overused letters (3+ times) */
+.tile.overused {
+    background: #4a5a7a;
+    border-color: #2f3a50;
+    color: #fff;
+}
+
+/* ============================================================
+   GAME UI
+   ============================================================ */
+
+#game-message {
+    margin-top: 10px;
+    min-height: 24px;
+    font-size: 18px;
+}
+
+#score-display {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* ============================================================
+   LEADERBOARD
+   ============================================================ */
 
 #leaderboard-tabs {
     display: flex;
-    gap: 4px;
-    margin-bottom: 8px;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .tab-btn {
-    flex: 1;
-    background: #30304a;
-    border-color: #000;
-    box-shadow: 0 3px 0 #000;
+    width: 140px;
+    margin: 0 5px;
 }
 
 .tab-btn.active {
-    background: var(--accent3);
-    color: #000;
+    background: #555;
 }
 
 #leaderboard-mode-selector {
-    margin: 4px 0 10px;
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    margin: 10px 0;
 }
 
 .mode-chip {
-    padding: 4px 8px;
-    border: 2px solid #000;
-    background: #050509;
-    font-size: 11px;
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 5px;
+    border: 2px solid #fff;
     cursor: pointer;
 }
 
 .mode-chip.active {
-    background: var(--accent2);
-    color: #000;
+    background: #444;
 }
 
 #leaderboard-list {
-    margin-top: 6px;
+    margin-top: 20px;
     text-align: left;
-    background: #050509;
-    border: 3px solid #000;
-    padding: 8px;
-    min-height: 140px;
-    max-height: 220px;
-    overflow-y: auto;
-    font-size: 13px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .lb-row {
     display: flex;
     justify-content: space-between;
-    padding: 2px 0;
+    padding: 6px 0;
+    border-bottom: 1px solid #444;
 }
 
 .lb-rank {
-    width: 20px;
+    width: 40px;
 }
 
 .lb-name {
@@ -279,50 +216,53 @@ button:active {
     text-align: right;
 }
 
-/* ---------- INSTRUCTIONS ---------- */
+/* ============================================================
+   INSTRUCTIONS
+   ============================================================ */
 
 .panel {
-    background: #050509;
-    border: 3px solid #000;
-    padding: 10px;
+    background: #222;
+    padding: 20px;
+    border: 3px solid #555;
+    margin-top: 20px;
     text-align: left;
-    font-size: 13px;
-    margin-bottom: 10px;
 }
 
 .legend {
     list-style: none;
     padding: 0;
-    margin: 6px 0 8px;
 }
 
 .legend li {
     display: flex;
     align-items: center;
-    gap: 6px;
+    margin-bottom: 10px;
 }
 
 .legend .tile {
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
+    margin-right: 10px;
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 @media (max-width: 480px) {
-    h1 {
-        font-size: 24px;
+    #game-board {
+        width: 220px;
     }
 
-    .screen {
-        max-width: 360px;
+    .tile {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    button {
+        width: 220px;
+    }
+
+    input {
+        width: 220px;
     }
 }
-
-.tile.overused {
-    background-color: #4a5a7a; /* gray-blue */
-    color: white;
-    border-color: #2f3a50;
-}
-
