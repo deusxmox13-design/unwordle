@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Unwordle</title>
+    <title>Unwordle NES Edition</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Pixel Operator font (modern retro pixel) -->
+    <!-- Pixel font -->
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- USERNAME SCREEN -->
+    <!-- USERNAME / PROFILE SCREEN -->
     <div id="username-screen" class="screen">
         <h1>UNWORDLE</h1>
         <p class="subtitle">Retro Online Edition</p>
-        <p>Enter your name to start:</p>
+
+        <p>Enter your username:</p>
         <input id="username-input" type="text" maxlength="12" placeholder="PLAYER 1">
+
         <button id="username-confirm-btn">START</button>
+
         <p id="username-error" class="error-text"></p>
     </div>
 
@@ -38,8 +41,10 @@
     <!-- GAME SCREEN -->
     <div id="game-screen" class="screen">
         <h1 id="game-title">UNWORDLE</h1>
+
         <p id="game-mode-label"></p>
         <div id="score-display"></div>
+
         <div id="game-board"></div>
 
         <div id="input-row">
@@ -66,9 +71,7 @@
             <span id="lb-mode-endless" class="mode-chip">ENDLESS MODE</span>
         </div>
 
-        <div id="leaderboard-list">
-            <!-- Filled by JS -->
-        </div>
+        <div id="leaderboard-list"></div>
 
         <button id="leaderboard-back-btn" class="secondary-btn">BACK</button>
     </div>
@@ -76,23 +79,27 @@
     <!-- INSTRUCTIONS SCREEN -->
     <div id="instructions-screen" class="screen">
         <h1>HOW TO PLAY</h1>
+
         <div class="panel">
-            <p>Guess the hidden word in a limited number of tries.</p>
-            <p>Tiles show feedback:</p>
+            <p>Guess the hidden 5‑letter word in a limited number of tries.</p>
+            <p>Tile colors show feedback:</p>
+
             <ul class="legend">
-                <li><span class="tile overused">A</span> Letter used 3 or more times — counts for 0 points</li>
                 <li><span class="tile green">A</span> Correct letter, correct spot</li>
                 <li><span class="tile yellow">A</span> Letter is in the word, wrong spot</li>
                 <li><span class="tile red">A</span> Letter is not in the word</li>
+                <li><span class="tile overused">A</span> Letter used 3 or more times — counts for 0 points</li>
             </ul>
-            <p>Scoring is based on your performance. Higher scores are better.</p>
-            <p>Daily Mode: same word for everyone each day.</p>
-            <p>Endless Mode: play as many rounds as you want and chase high scores.</p>
+
+            <p>Daily Mode: one shared word per day.</p>
+            <p>Endless Mode: unlimited rounds, score as high as possible.</p>
+            <p>All guesses are validated using the Merriam‑Webster Dictionary API.</p>
         </div>
+
         <button id="instructions-back-btn" class="secondary-btn">BACK</button>
     </div>
 
+    <!-- GAME SCRIPT -->
     <script src="game.js"></script>
 </body>
 </html>
-
