@@ -1,68 +1,94 @@
 /* ----------------------------------
-   GLOBAL SCREEN VISIBILITY FIX
+   GLOBAL SCREEN VISIBILITY
 ---------------------------------- */
 
-/* Hide all screens unless JS shows them */
 .screen {
     display: none !important;
 }
 
-/* Show login screen first */
 #login-container {
     display: block !important;
 }
 
 /* ----------------------------------
-   GENERAL PAGE STYLING
+   GLOBAL PAGE STYLE
 ---------------------------------- */
 
 body {
-    background: #111;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a, #111);
+    color: #f2f2f2;
+    font-family: "Segoe UI", Arial, sans-serif;
+    text-align: center;
+    min-height: 100vh;
 }
 
-h1 {
-    margin-bottom: 20px;
-}
-
-p {
-    margin: 10px 0;
+/* Center all screens */
+.screen {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
 }
 
 /* ----------------------------------
-   INPUTS & BUTTONS
+   HEADERS
+---------------------------------- */
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+/* ----------------------------------
+   INPUTS
 ---------------------------------- */
 
 input {
-    display: block;
+    width: 85%;
+    padding: 12px;
     margin: 10px auto;
-    padding: 10px;
-    width: 220px;
-    border-radius: 5px;
-    border: none;
-    background: #222;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1e1e1e;
     color: white;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
 }
 
+input:focus {
+    border-color: #4af;
+    box-shadow: 0 0 8px #4af;
+}
+
+/* ----------------------------------
+   BUTTONS
+---------------------------------- */
+
 button {
-    display: block;
-    margin: 10px auto;
-    padding: 12px 20px;
-    background: #444;
-    color: white;
+    width: 85%;
+    padding: 12px;
+    margin: 12px auto;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+    font-size: 17px;
     cursor: pointer;
-    width: 200px;
-    font-size: 16px;
+    transition: 0.25s;
 }
 
 button:hover {
-    background: #666;
+    background: #4af;
+    box-shadow: 0 0 12px #4af;
 }
 
 .link-btn {
@@ -73,11 +99,12 @@ button:hover {
 }
 
 .danger-btn {
-    background: #a00;
+    background: #b00020;
 }
 
 .danger-btn:hover {
-    background: #c00;
+    background: #e00030;
+    box-shadow: 0 0 12px #e00030;
 }
 
 /* ----------------------------------
@@ -86,18 +113,19 @@ button:hover {
 
 #leaderboard-list {
     margin-top: 20px;
-    text-align: left;
-    width: 260px;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
-    background: #222;
+    background: rgba(255,255,255,0.07);
     padding: 15px;
     border-radius: 10px;
+    text-align: left;
 }
 
 #leaderboard-list div {
-    padding: 8px;
-    border-bottom: 1px solid #333;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 16px;
 }
 
 #leaderboard-list div:last-child {
@@ -120,23 +148,24 @@ button:hover {
 .guess-row {
     display: flex;
     justify-content: center;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .guess-box {
-    width: 40px;
-    height: 40px;
-    margin: 3px;
+    width: 42px;
+    height: 42px;
+    margin: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 20px;
     color: black;
-    font-size: 18px;
+    transition: 0.2s;
 }
 
-/* Colors for scoring */
+/* Tile colors */
 .green { background: #2ecc71; }
 .yellow { background: #f1c40f; }
 .red { background: #e74c3c; }
