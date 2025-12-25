@@ -2,65 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unwordle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Pixel Operator font (modern retro pixel) -->
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-container" class="screen">
-        <h1>Unwordle</h1>
-        <input id="login-username" placeholder="Username">
-        <input id="login-password" type="password" placeholder="Password">
-        <button id="login-btn">Login</button>
-        <p id="login-message"></p>
-        <button id="goto-create-btn" class="link-btn">Create Account</button>
+    <!-- USERNAME SCREEN -->
+    <div id="username-screen" class="screen">
+        <h1>UNWORDLE</h1>
+        <p class="subtitle">Retro Online Edition</p>
+        <p>Enter your name to start:</p>
+        <input id="username-input" type="text" maxlength="12" placeholder="PLAYER 1">
+        <button id="username-confirm-btn">START</button>
+        <p id="username-error" class="error-text"></p>
     </div>
 
-    <!-- CREATE ACCOUNT SCREEN -->
-    <div id="create-container" class="screen">
-        <h1>Create Account</h1>
-        <input id="create-username" placeholder="Username">
-        <input id="create-password" type="password" placeholder="Password">
-        <button id="create-btn">Create</button>
-        <p id="create-message"></p>
-        <button id="goto-login-btn" class="link-btn">Back to Login</button>
-    </div>
+    <!-- MAIN MENU -->
+    <div id="menu-screen" class="screen">
+        <h1>UNWORDLE</h1>
+        <p id="welcome-text"></p>
 
-    <!-- MENU SCREEN -->
-    <div id="menu-container" class="screen">
-        <h1>Unwordle</h1>
-        <p id="menu-welcome"></p>
-        <button id="daily-mode-btn">Daily Mode</button>
-        <button id="endless-mode-btn">Endless Mode</button>
-        <button id="goto-leaderboard-btn">Leaderboard</button>
-        <button id="instructions-btn">Instructions</button>
-        <button id="logout-btn" class="danger-btn">Logout</button>
-    </div>
+        <button id="daily-mode-btn">DAILY MODE</button>
+        <button id="endless-mode-btn">ENDLESS MODE</button>
+        <button id="leaderboard-btn">LEADERBOARDS</button>
+        <button id="instructions-btn">HOW TO PLAY</button>
 
-    <!-- INSTRUCTIONS SCREEN -->
-    <div id="instructions-container" class="screen">
-        <h1>Instructions</h1>
-        <div id="instructions-text"></div>
-        <button id="instructions-back-btn">Back</button>
-    </div>
-
-    <!-- LEADERBOARD SCREEN -->
-    <div id="leaderboard-container" class="screen">
-        <h1>Leaderboard</h1>
-        <div id="leaderboard-list"></div>
-        <button id="leaderboard-back-btn">Back</button>
+        <button id="change-user-btn" class="secondary-btn">CHANGE PLAYER</button>
     </div>
 
     <!-- GAME SCREEN -->
-    <div id="game-container" class="screen">
-        <div id="game-area"></div>
-        <input id="player-input" maxlength="10" placeholder="Enter guess">
-        <button id="submit-btn">Submit</button>
-        <p id="message"></p>
-        <div id="guess-history"></div>
-        <button id="back-menu-btn">Back to Menu</button>
+    <div id="game-screen" class="screen">
+        <h1 id="game-title">UNWORDLE</h1>
+        <p id="game-mode-label"></p>
+        <div id="score-display"></div>
+        <div id="game-board"></div>
+
+        <div id="input-row">
+            <input id="guess-input" type="text" maxlength="10" placeholder="TYPE YOUR GUESS">
+            <button id="guess-btn">GUESS</button>
+        </div>
+
+        <p id="game-message"></p>
+
+        <button id="back-to-menu-btn" class="secondary-btn">BACK TO MENU</button>
+    </div>
+
+    <!-- LEADERBOARD SCREEN -->
+    <div id="leaderboard-screen" class="screen">
+        <h1>LEADERBOARDS</h1>
+
+        <div id="leaderboard-tabs">
+            <button id="tab-daily" class="tab-btn active">DAILY</button>
+            <button id="tab-alltime" class="tab-btn">ALL-TIME</button>
+        </div>
+
+        <div id="leaderboard-mode-selector">
+            <span id="lb-mode-daily" class="mode-chip active">DAILY MODE</span>
+            <span id="lb-mode-endless" class="mode-chip">ENDLESS MODE</span>
+        </div>
+
+        <div id="leaderboard-list">
+            <!-- Filled by JS -->
+        </div>
+
+        <button id="leaderboard-back-btn" class="secondary-btn">BACK</button>
+    </div>
+
+    <!-- INSTRUCTIONS SCREEN -->
+    <div id="instructions-screen" class="screen">
+        <h1>HOW TO PLAY</h1>
+        <div class="panel">
+            <p>Guess the hidden word in a limited number of tries.</p>
+            <p>Tiles show feedback:</p>
+            <ul class="legend">
+                <li><span class="tile green">A</span> Correct letter, correct spot</li>
+                <li><span class="tile yellow">A</span> Letter is in the word, wrong spot</li>
+                <li><span class="tile red">A</span> Letter is not in the word</li>
+            </ul>
+            <p>Scoring is based on your performance. Higher scores are better.</p>
+            <p>Daily Mode: same word for everyone each day.</p>
+            <p>Endless Mode: play as many rounds as you want and chase high scores.</p>
+        </div>
+        <button id="instructions-back-btn" class="secondary-btn">BACK</button>
     </div>
 
     <script src="game.js"></script>
